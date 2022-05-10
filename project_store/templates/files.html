@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %} files {% endblock %}
+
+{% block content %}
+
+  <br>
+  {% for file in list_of_files %}
+    <a href="{% url 'download_file' dir file %}">{{ file }}</a>
+    <br>
+  {% endfor %}
+
+
+{% endblock %}
