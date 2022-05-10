@@ -4,7 +4,7 @@ from django.http import FileResponse
 import os
 
 # Create your views here.
-black_alex_path = "/home/sindri/blackalex"
+black_alex_path = "/blackalex"
 
 #app_name = 'project_store'
 
