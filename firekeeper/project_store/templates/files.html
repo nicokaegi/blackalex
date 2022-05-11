@@ -4,6 +4,12 @@
 
 {% block content %}
 
+  <form method='POST' action="{% url 'upload_file' dir %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" id="input_file" name="new_file">
+    <input type="submit">
+  </form>
+
   <br>
   {% for file in list_of_files %}
     <a href="{% url 'download_file' dir file %}">{{ file }}</a>
