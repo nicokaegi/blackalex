@@ -87,3 +87,7 @@ def upload_file(request, dir_name):
         handle_uploaded_file(dir_path,file_obj)
         list_of_files = os.listdir(dir_path)
         return render(request, 'files.html', {'dir' : dir_name, 'list_of_files' : list_of_files})
+
+@login_required
+def about(request):
+    return render(request, 'about.html')

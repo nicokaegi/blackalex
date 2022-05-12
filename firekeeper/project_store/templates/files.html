@@ -4,17 +4,32 @@
 
 {% block content %}
 
-  <form method='POST' action="{% url 'upload_file' dir %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="file" id="input_file" name="new_file">
-    <input type="submit">
-  </form>
-
-  <br>
-  {% for file in list_of_files %}
-    <a href="{% url 'download_file' dir file %}">{{ file }}</a>
-    <br>
-  {% endfor %}
-
+   <br>
+   <div class="container">
+     <div class="row">
+       <div class="col col-lg-2">
+         <a class="btn btn-dark" href="{% url 'home' %}">Back</a>
+       </div>
+       <div class="col">
+         {% for file in list_of_files %}
+           <div class="card">
+             <div class="card-body">
+               <a href="{% url 'download_file' dir file %}">{{ file }}</a>
+             </div>
+           </div>
+         {% endfor %}
+       </div>
+       <div class="col col-lg-3">
+         <form method='POST' action="{% url 'upload_file' dir %}" enctype="multipart/form-data">
+           {% csrf_token %}
+           <div class="input-group mb-3 dark">
+              <input type="file" class="form-control" id="new_file">
+            </div>
+            <input class="btn btn-dark" type="submit">
+         </form>
+       </div>
+     </div>
+   </div>
+   <br>
 
 {% endblock %}
