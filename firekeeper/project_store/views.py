@@ -2,17 +2,14 @@ from django.shortcuts import render
 from django.http import FileResponse
 from django.contrib.auth.decorators import login_required
 
-import os
+from firekeeper.settings import black_alex_path
 
-'''
-todo:
-    in the front end make it so files above some size get compressed
-    before being sent down wire
-'''
+import os
+import zipfile
+import shutil
 
 
 # Create your views here.
-black_alex_path = "/home/sindri/blackalex"
 
 #app_name = 'project_store'
 
@@ -37,12 +34,16 @@ def break_into_3s(in_list):
     else:
         return []
 
+def get_files(dir_path):
+    return [item for item in os.listdir(dir_path) if item[0] != '.']
+
+
 @login_required
 def home(request):
     '''
     main view of all the file dirs as rows of at most 3 boot strap cards
     '''
-    list_of_dirs = os.listdir(black_alex_path)
+    list_of_dirs = get_files(black_alex_path)
     list_of_dirs = break_into_3s(list_of_dirs)
     return render(request, 'home.html', {'list_of_dirs' : list_of_dirs })
 
@@ -52,7 +53,7 @@ def view_files(request, dir_name):
     send back a list of all the file names in a directory
     '''
     dir_path = '/'.join([black_alex_path, dir_name])
-    list_of_files = os.listdir(dir_path)
+    list_of_files = get_files(dir_path)
     return render(request, 'files.html', {'dir' : dir_name, 'list_of_files' : list_of_files})
 
 @login_required
@@ -62,10 +63,22 @@ def download_file(request, dir_name, file_name):
     and returning it as a django response object
     '''
     file_path = '/'.join([black_alex_path, dir_name, file_name])
+
+    # if the number of bytes is greater than 5mb and not compressed thecompress
+
+    if (os.path.getsize(file_path) > 500000000) and (file_path.split('.')[1] != 'zip'):
+        zip_file_name = "{}.{}".format(file_path.split('.')[0], "zip")
+        with zipfile.ZipFile(zip_file_name, "w") as zf:
+            zf.write(file_path)
+
+        shutil.move(file_path,"{}/{}".format(black_alex_path,".trash"))
+        file_path = zip_file_name
+
+
     out_file = open(file_path,'rb')
     response = FileResponse(out_file)
     response['Content-Type']='application/octet-stream'
-    response['Content-Disposition']='attachment;filename="{}"'.format(file_name)
+    response['Content-Disposition']='attachment;filename="{}"'.format(file_path.split('/')[-1])
     return response
 
 
