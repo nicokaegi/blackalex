@@ -96,10 +96,27 @@ def upload_file(request, dir_name):
     if request.method == 'POST':
         dir_path = '/'.join([black_alex_path, dir_name])
         file_obj = request.FILES['new_file']
-        print(file_obj.name)
         handle_uploaded_file(dir_path,file_obj)
         list_of_files = os.listdir(dir_path)
         return render(request, 'files.html', {'dir' : dir_name, 'list_of_files' : list_of_files})
+
+@login_required
+def new_dir(request):
+    '''
+    from the text input on the home page create a new dir if one with the same name
+    doesn't already exist
+    '''
+    if request.method == 'POST':
+        new_dir_name = request.POST['new_dir_name']
+        list_of_dirs = get_files(black_alex_path)
+        if not (new_dir_name in list_of_dirs):
+            os.mkdir('{}/{}'.format(black_alex_path,new_dir_name))
+            list_of_dirs = break_into_3s(list_of_dirs)
+
+        else:
+            list_of_dirs = break_into_3s(list_of_dirs)
+
+        return render(request, 'home.html', {'list_of_dirs' : list_of_dirs })
 
 @login_required
 def about(request):

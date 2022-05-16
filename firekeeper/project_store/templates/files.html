@@ -23,7 +23,7 @@
          <form method='POST' action="{% url 'upload_file' dir %}" enctype="multipart/form-data">
            {% csrf_token %}
            <div class="input-group mb-3 dark">
-              <input type="file" class="form-control" id="new_file">
+              <input type="file" class="form-control" name="new_file">
             </div>
             <input class="btn btn-dark" type="submit">
          </form>

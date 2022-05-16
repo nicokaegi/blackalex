@@ -4,23 +4,40 @@
 
 {% block content %}
 
-  <!-- <div class="card-group"> -->
+
   <br>
-  {% for list in list_of_dirs %}
-    <div class="card-group">
-    {% for dir in list %}
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title"> {{ dir }}</h5>
-          <a href="{% url 'files' dir %}" class="btn btn-dark">Open</a>
-        </div>
-        <div class="card-footer">
-        </div>
+  <div class="container">
+    <div class="row">
+      <div class="col col-lg-3">
+        <form method='POST' action="{% url 'new_dir' %}"  enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="input-group mb-3">
+            <input name="new_dir_name" type="text" class="form-control" placeholder="directory name" required></input>
+            <button class="btn btn-dark" type="submit">Create</button>
+          </div>
+        </form>
       </div>
-     {% endfor %}
-     </div>
-  {% endfor %}
-  <!-- </div> -->
+      <div class="col">
+        {% for list in list_of_dirs %}
+          <div class="card-group">
+          {% for dir in list %}
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title"> {{ dir }}</h5>
+                <a href="{% url 'files' dir %}" class="btn btn-dark">Open</a>
+              </div>
+              <div class="card-footer">
+              </div>
+            </div>
+           {% endfor %}
+           </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <br>
+
+
 
 
 {% endblock %}
